@@ -15,6 +15,7 @@ struct superblock
 struct inode
 {
     int size;
+    int first_block;
     char name[8];
 
 };
@@ -30,6 +31,7 @@ struct disk_block {
 void create_fs(); //to intialize new FS
 void mount_fs();    // load FS
 void sync_fs();     //write the FS
+void print_fs();    //to print all the information of FS
 
 
 

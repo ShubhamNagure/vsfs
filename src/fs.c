@@ -3,9 +3,9 @@
 #include<string.h>
 #include "fs.h"
 
-// void create_fs(); //to intialize new FS
-// void mount_fs();    // load FS
-// void sync_fs();     //write the FS
+// void create_fs();        //to intialize new FS
+// void mount_fs();      // load FS
+// void sync_fs();      //write the FS
 
 struct superblock sb;
 struct inode *inodes; //pointer variable to point to blocks
@@ -23,7 +23,8 @@ void create_fs(){
     for (i=0; i< sb.num_inodes; i++)
     {
         inodes[i].size=-1;
-        strcpy(inodes[i].name,"makefile");
+        inodes[i].first_block=-1;
+        strcpy(inodes[i].name,"");
 
     } //init inodes
 
@@ -42,9 +43,27 @@ void create_fs(){
 
 }// create fs
 
+
 //load the Fs for that we have to mount it.
 void mount_fs(){
+    FILE *file;
+    
+    file=fopen("fs_data","r");
 
+     
+
+    //superblock
+    fread(&sb, sizeof(struct superblock),1,file);
+    inodes= malloc(sizeof ( struct inode)* sb.num_inodes); //inodes
+     dbs=malloc(sizeof (struct disk_block)* sb.num_blocks); //disk block 
+
+     //inodes 
+    fread(inodes, sizeof(struct inode),sb.num_inodes,file);
+    //disk blocks
+    fread(dbs, sizeof(struct disk_block),sb.num_blocks,file);
+    
+   
+    fclose(file);
      
 } 
 
@@ -62,8 +81,6 @@ void sync_fs(){
     for (i=0; i< sb.num_inodes; i++)
     {
         fwrite(&(inodes[i]), sizeof(struct inode),1,file);
-        
-
     } //write inodes
     
 
@@ -75,4 +92,29 @@ void sync_fs(){
     }//write data_blocks
     fclose(file);
 }//sync_fs 
+//print out info about the FS
+void print_fs(){
 
+    printf("Superbloc info\n");
+    printf("\t num inodes %d\n",sb.num_inodes);
+    printf("\t num blocks %d\n",sb.num_blocks);
+    printf("\t size of block %d\n",sb.size_blocks);
+
+    printf("inodes\n");
+    //setup inodes and disk blocks
+    int i;
+    for (i=0; i< sb.num_inodes; i++)
+    {
+        printf("\t Size: %d block: %d  name: %s\n",inodes[i].size,inodes[i].first_block,inodes[i].name);
+
+    } //init inodes
+    for (i=0; i< sb.num_blocks; i++) 
+    {
+        printf("\t block num :%d next block:%d\n",i,dbs[i].next_block_num);
+
+         
+    }//init dbs
+    
+
+
+}//print fs
