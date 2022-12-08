@@ -31,7 +31,7 @@ struct disk_block {
 void create_fs(); //to intialize new FS
 void mount_fs();    // load FS
 void sync_fs();     //write the FS
-int allocate_fs(char name[8],);
+int allocate_file(char name[8]);
 void print_fs();    //to print all the information of FS
 
 

@@ -11,6 +11,28 @@ struct superblock sb;
 struct inode *inodes; //pointer variable to point to blocks
 struct disk_block *dbs; 
 
+//compailer to know about internal functions
+//find an empty inode
+int find_empty_inode(){
+    int i;
+    for(i=0;i<sb.num_inodes;i++){
+        if(inodes[i].first_block==-1){
+        return i;
+        }
+    }
+    return -1;
+}
+//find and empty disk block
+int find_empty_block(){
+int i;
+    for(i=0;i<sb.num_blocks;i++){
+        if(dbs[i].next_block_num==-1){
+        return i;
+        }
+    }
+    return -1;
+}
+
 //to initilaize new Fs
 void create_fs(){
     sb.num_inodes=10;
@@ -20,13 +42,14 @@ void create_fs(){
     //setup inodes and disk blocks
     int i;
     inodes= malloc(sizeof ( struct inode)* sb.num_inodes); //inodes
+
+    //init inodes
     for (i=0; i< sb.num_inodes; i++)
     {
         inodes[i].size=-1;
         inodes[i].first_block=-1;
         strcpy(inodes[i].name,"");
-
-    } //init inodes
+    } 
 
     dbs=malloc(sizeof (struct disk_block)* sb.num_blocks); //disk block 
     /*what we want is that allocate the space for the disk so to achieve 
@@ -34,13 +57,10 @@ void create_fs(){
     is multiple by the number of the blocks that are associated for the data block by 
     superblock
     */
-    for (i=0; i< sb.num_blocks; i++) 
-    {
-          dbs[i].next_block_num=-1;
-    }//init dbs
-    
-
-
+    //init dbs
+    for (i=0; i< sb.num_blocks; i++){
+        dbs[i].next_block_num=-1;
+    }
 }// create fs
 
 
@@ -49,20 +69,14 @@ void mount_fs(){
     FILE *file;
     
     file=fopen("fs_data","r");
-
-     
-
     //superblock
     fread(&sb, sizeof(struct superblock),1,file);
     inodes= malloc(sizeof ( struct inode)* sb.num_inodes); //inodes
-     dbs=malloc(sizeof (struct disk_block)* sb.num_blocks); //disk block 
-
-     //inodes 
+    dbs=malloc(sizeof (struct disk_block)* sb.num_blocks); //disk block 
+    //inodes 
     fread(inodes, sizeof(struct inode),sb.num_inodes,file);
     //disk blocks
     fread(dbs, sizeof(struct disk_block),sb.num_blocks,file);
-    
-   
     fclose(file);
      
 } 
@@ -87,15 +101,15 @@ void sync_fs(){
     for (i=0; i< sb.num_blocks ; i++)
     {
         fwrite(&(dbs[i]), sizeof(struct disk_block),1,file);
-        
-
     }//write data_blocks
     fclose(file);
-}//sync_fs 
-//print out info about the FS
+}
+
+// sync_fs
+// print out info about the FS
 void print_fs(){
 
-    printf("Superbloc info\n");
+    printf("Superblock info\n");
     printf("\t num inodes %d\n",sb.num_inodes);
     printf("\t num blocks %d\n",sb.num_blocks);
     printf("\t size of block %d\n",sb.size_blocks);
@@ -110,11 +124,30 @@ void print_fs(){
     } //init inodes
     for (i=0; i< sb.num_blocks; i++) 
     {
-        printf("\t block num :%d next block:%d\n",i,dbs[i].next_block_num);
-
-         
+        printf("\t block num :%d next block:%d\n",i,dbs[i].next_block_num);   
     }//init dbs
     
-
-
 }//print fs
+
+//allocation of the File
+int allocate_file(char name[8])
+{
+    //find an empty inode
+    int empty_inode=find_empty_inode();
+
+    //find an empty disk block
+    int empty_block=find_empty_block();
+
+    //claim them
+    inodes[empty_inode].first_block=empty_block;
+    dbs[empty_block].next_block_num=-2;
+
+    //to fix the 'emptyfile' name issue for inode
+    strcpy(inodes[empty_inode].name,name);
+
+    //return the file descriptor
+    return empty_inode;
+
+    
+}
+
