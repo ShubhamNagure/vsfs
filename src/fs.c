@@ -43,6 +43,16 @@ void shorten_file(int bn){
     dbs[bn].next_block_num=-1;
 }
 
+//get block number
+int get_block_num(int file,int offset){
+    int togo=offset;
+    int bn=inodes[file].first_block;
+    while(togo>0){
+        bn=dbs[bn].next_block_num;
+        togo--;
+    }
+    return bn;
+}
 //to initilaize new Fs
 void create_fs(){
     sb.num_inodes=10;
@@ -190,4 +200,15 @@ void set_filesize(int filenum, int size)
 //write byte
 void write_byte(int filenum, int pos, char *data)
 {
+    //cal which block
+    int relative_block=pos/BLOCKSIZE;
+
+    //find the block number
+    int bn=get_block_num(filenum,relative_block);
+    //cal the offset of the block
+    int offset=pos%BLOCKSIZE;
+
+    //write the data
+    dbs[bn].data[offset]=(*data);
+
 }

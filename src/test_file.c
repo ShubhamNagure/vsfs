@@ -5,16 +5,15 @@ void main()
     // create_fs();
    
     mount_fs();
-    // allocate_file("firstfi");
-    set_filesize(0,1000);
+    int file=allocate_file("another");
+    set_filesize(file,5000);
     print_fs();
+    int i;
+    char data='b';
+    for ( i = 0; i <49; i++){
+        write_byte(file ,i*100,&data);
 
-    set_filesize(0,5000);
-    print_fs();
-
-    set_filesize(0,100);
-    print_fs();
-
+    }
     sync_fs();
     printf("done\n");
 
