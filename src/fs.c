@@ -33,6 +33,16 @@ int i;
     return -1;
 }
 
+//to shorten a file
+void shorten_file(int bn){
+    int nn=dbs[bn].next_block_num;
+    if (nn>=0)
+    {
+        shorten_file(nn);
+    }
+    dbs[bn].next_block_num=-1;
+}
+
 //to initilaize new Fs
 void create_fs(){
     sb.num_inodes=10;
@@ -150,4 +160,34 @@ int allocate_file(char name[8])
 
     
 }
+//set_filesize and add or delete blocks
+void set_filesize(int filenum, int size)
+{
+    //how many block should we have
+    int tmp=size+BLOCKSIZE-1;
+    int num=tmp/BLOCKSIZE;
+    int bn=inodes[filenum].first_block;
+    num--;
+    //to grow the file is neccessary
+    while(num>0){
+        //check next block number
+        int next_num=dbs[bn].next_block_num;
+        if(next_num==-2){
+            int empty= find_empty_block();
+            dbs[bn].next_block_num=empty;
+            dbs[empty].next_block_num=-2;
 
+        }
+        bn=dbs[bn].next_block_num;
+        num--;
+    }
+
+    //shortern if neccessary
+    shorten_file(bn);
+    dbs[bn].next_block_num=-2;
+}
+
+//write byte
+void write_byte(int filenum, int pos, char *data)
+{
+}

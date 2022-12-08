@@ -6,8 +6,16 @@ void main()
    
     mount_fs();
     // allocate_file("firstfi");
-    sync_fs();
+    set_filesize(0,1000);
     print_fs();
+
+    set_filesize(0,5000);
+    print_fs();
+
+    set_filesize(0,100);
+    print_fs();
+
+    sync_fs();
     printf("done\n");
 
 }//main
