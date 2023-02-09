@@ -212,3 +212,19 @@ void write_byte(int filenum, int pos, char *data)
     dbs[bn].data[offset]=(*data);
 
 }
+
+//read the data from the file
+void read_byte(int filenum, int pos)
+{
+      FILE *f=fopen("fs_data","r");
+    char c;
+  //loop for each byte to the end
+  {
+    size_t fread(&c, (size_t)1, (size_t) 1, f);
+    array[c]++;
+  }
+}
+
+
+
+

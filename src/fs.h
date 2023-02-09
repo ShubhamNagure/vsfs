@@ -33,10 +33,18 @@ struct disk_block {
 void create_fs(); //to intialize new FS
 void mount_fs();    // load FS
 void sync_fs();     //write the FS
-int allocate_file(char name[8]);
-void set_filesize(int filenum,int size);
-void write_byte(int filenum,int pos,char *data);
 void print_fs();    //to print all the information of FS
+
+//allocate the file to the FS
+int allocate_file(char name[8]);
+//set filesize
+void set_filesize(int filenum,int size);
+//write the data to the File
+void write_byte(int filenum,int pos,char *data);
+//read the data from th file
+void read_byte(int filenum,int pos);
+//delete the data / delete the file from FS
+
 
 
 

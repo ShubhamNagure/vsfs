@@ -1,6 +1,6 @@
 FROM mcr.microsoft.com/devcontainers/cpp:0-ubuntu-18.04
 
-ARG REINSTALL_CMAKE_VERSION_FROM_SOURCE="3.21.5"
+ARG REINSTALL_CMAKE_VERSION_FROM_SOURCE=""
 
 # Optionally install the cmake for vcpkg
 COPY ./reinstall-cmake.sh /tmp/
