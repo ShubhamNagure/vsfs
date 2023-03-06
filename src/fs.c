@@ -183,10 +183,15 @@ void set_filesize(int filenum, int size)
         //check next block number
         int next_num=dbs[bn].next_block_num;
         if(next_num==-2){
-            int empty= find_empty_block();
-            dbs[bn].next_block_num=empty;
+            int empty= find_empty_block(); //it will find the empty block 
+            dbs[bn].next_block_num=empty; 
             dbs[empty].next_block_num=-2;
-
+                // at each itratiion each block dbs[] of that
+                // file will point to the block which is empty
+                //the next_block_num of the current block is -2 
+                
+                //that loop will till num>0 if it is 0 then it stop the loop
+                //
         }
         bn=dbs[bn].next_block_num;
         num--;
