@@ -189,7 +189,6 @@ void set_filesize(int filenum, int size)
                 // at each itratiion each block dbs[] of that
                 // file will point to the block which is empty
                 //the next_block_num of the current block is -2 
-                
                 //that loop will till num>0 if it is 0 then it stop the loop
                 //
         }
@@ -207,12 +206,10 @@ void write_byte(int filenum, int pos, char *data)
 {
     //cal which block
     int relative_block=pos/BLOCKSIZE;
-
     //find the block number
     int bn=get_block_num(filenum,relative_block);
     //cal the offset of the block
     int offset=pos%BLOCKSIZE;
-
     //write the data
     dbs[bn].data[offset]=(*data);
 
@@ -221,7 +218,7 @@ void write_byte(int filenum, int pos, char *data)
 //read the data from the file
 void read_byte(int filenum, int pos)
 {
-      FILE *f=fopen("fs_data","r");
+    FILE *f=fopen("fs_data","r");
     char c;
   //loop for each byte to the end
   {

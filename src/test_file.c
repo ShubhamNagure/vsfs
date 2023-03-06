@@ -13,7 +13,6 @@ void main()
     char data='b';
     for ( i = 0; i <49; i++){
         write_byte(file ,i*100,&data);
-
     }
    // to read the data
     // printf("file%d",file);
